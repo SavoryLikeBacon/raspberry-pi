@@ -1,0 +1,43 @@
+pi@raspberrypi ~ $
+pi@raspberrypi ~ $ cd /media
+pi@raspberrypi /media $ ls -l
+total 68
+drwx------ 16 pi pi 16384 Jan  1  1970 F039-C4D0
+dr-x------  1 pi pi 36864 Jul 13  2012 small_hd
+pi@raspberrypi /media $ cd /samba/share
+pi@raspberrypi /samba/share $ ls -l
+total 4
+-rwxr--r-- 1 nobody nogroup 579 Feb  9 23:38 readme.txt
+pi@raspberrypi /samba/share $ groups cory
+cory : cory users nogroup
+pi@raspberrypi /samba/share $ sudo nano /etc/samba/smb.conf
+pi@raspberrypi /samba/share $ sudo testparm -s
+Load smb config files from /etc/samba/smb.conf
+rlimit_max: increasing rlimit_max (1024) to minimum Windows limit (16384)
+Processing section "[MyShare]"
+Processing section "[2g_usb_drive]"
+Loaded services file OK.
+Server role: ROLE_STANDALONE
+[global]
+        netbios name = DANCING_PI
+        server string = Samba Server %v
+        map to guest = Bad User
+        socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=65535 SO_SNDBUF=65535
+        dns proxy = No
+        idmap config * : backend = tdb
+
+[MyShare]
+        path = /samba/share
+        guest ok = Yes
+
+[2g_usb_drive]
+        path = /media/F039-C4D0
+        ;valid users = cory
+	force users = root
+	force group = root
+        read only = No
+        create mask = 0777
+        directory mask = 0777
+        inherit permissions = Yes
+        guest only = Yes
+pi@raspberrypi /samba/share $
